@@ -39,6 +39,10 @@ app.get('/', async (req, res) => {
     await res.render('index', {title: 'Главная страница'});
 });
 
+app.get('/:page', async (req, res) => {
+        await res.render(req.params.page);
+});
+
 
 app.use((req, res) => {
     res.status(404).send('Page not found');
