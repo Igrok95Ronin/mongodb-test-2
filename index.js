@@ -3,7 +3,7 @@ import express from 'express';//подключаем express
 import ExpressHandlebars from 'express-handlebars';//шоблонизатор
 import path from 'path';//получаем абсолютный путь до файла
 import bodyParser from 'body-parser';/* Для поддержки работы нам нужно установить промежуточное ПО body-parser */
-import mongodb from 'mongodb';//импортировать установленный драйвер
+import mongodb, { ObjectId } from 'mongodb';//импортировать установленный драйвер
 
 const __dirname = path.resolve();//переобразовываем path
 const PORT = process.env.PORT ?? 3001;//проверяет есть ли порт
@@ -24,29 +24,32 @@ const mongoClient = new mongodb.MongoClient('mongodb://localhost:27017/', {//н�
 });
 mongoClient.connect(async function(error, mongo) {//установливаем подключение к MongoDB
     if(!error) {
-        const db = mongo.db('test');//подключаемся к созданной базе данных
-        const coll = db.collection('users');//получаем колекцию из базы
+        const db = mongo.db('test2');//подключаемся к созданной базе данных
+        const coll = db.collection('content');//получаем колекцию из базы
 
-        let user = await coll.find().toArray();
 
+        app.get('/', async (req, res) => {
+            const headerData = await coll.findOne({_id: ObjectId("6370a094527938d9ee5604d9")});
+            const mainImg = await coll.findOne({_id: ObjectId('6370a5c3527938d9ee5604da')});
+
+            await res.render('index', {
+                title: 'Главная страница',
+                header: headerData,
+                imgSrc: mainImg
+            });
+
+            console.log(headerData);
+            console.log(mainImg);
+        });
+        
+        
+        app.use((req, res) => {
+            res.status(404).send('Page not found');
+        });
+        app.listen(PORT, () => {
+            console.log(`Server running ${PORT}`);
+        });
     } else {
         console.error(err);
     }
-});
-
-
-app.get('/', async (req, res) => {
-    await res.render('index', {title: 'Главная страница'});
-});
-
-app.get('/:page', async (req, res) => {
-        await res.render(req.params.page);
-});
-
-
-app.use((req, res) => {
-    res.status(404).send('Page not found');
-});
-app.listen(PORT, () => {
-    console.log(`Server running ${PORT}`);
 });
