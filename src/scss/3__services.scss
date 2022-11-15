@@ -1,0 +1,19 @@
+.services {
+    padding: 20px 0;
+}
+.services__title {
+    text-align: center;
+}
+.services__ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+.services__li {
+    line-height: 30px;
+}
+.services__dscr {
+    text-align: center;
+    font-weight: 900;
+    line-height: 20px;
+    padding: 0 0 20px;
+}

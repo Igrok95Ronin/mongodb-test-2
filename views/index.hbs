@@ -5,3 +5,17 @@
         </div>
     </div>
 </section>
+<section class="services">
+    <div class="container">
+        <h2 class="services__title">{{titleService.title}}</h2>
+        <div class="services__box">
+            <ul class="services__ul">
+                {{#each service}}
+                <li class="services__li">{{name}}</li>
+                {{/each}}
+            </ul>
+        </div>
+            <p class="services__dscr">{{dscrService.dscr}}</p>
+    </div>
+</section>
+

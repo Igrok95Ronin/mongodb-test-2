@@ -24,18 +24,26 @@ const mongoClient = new mongodb.MongoClient('mongodb://localhost:27017/', {//н�
 });
 mongoClient.connect(async function(error, mongo) {//установливаем подключение к MongoDB
     if(!error) {
-        const db = mongo.db('test2');//подключаемся к созданной базе данных
-        const coll = db.collection('content');//получаем колекцию из базы
+        const db = mongo.db('test2'),//подключаемся к созданной базе данных
+            coll = db.collection('content'),//получаем колекцию из базы
+            services = db.collection('services'),
+            titleDscr = db.collection('titleDscr');
 
 
         app.get('/', async (req, res) => {
-            const headerData = await coll.findOne({_id: ObjectId("6370a094527938d9ee5604d9")});
-            const mainImg = await coll.findOne({_id: ObjectId('6370a5c3527938d9ee5604da')});
+            const headerData = await coll.findOne({_id: ObjectId("6370a094527938d9ee5604d9")}),
+                mainImg = await coll.findOne({_id: ObjectId('6370a5c3527938d9ee5604da')}),
+                service = await services.find().toArray(),
+                tiDs = await titleDscr.findOne(),
+                dsTi = await titleDscr.findOne({_id: ObjectId('6372068370ee482d67f67f00')});
 
             await res.render('index', {
                 title: 'Главная страница',
                 header: headerData,
-                imgSrc: mainImg
+                imgSrc: mainImg,
+                service: service,
+                titleService: tiDs,
+                dscrService: dsTi
             });
 
             console.log(headerData);
